@@ -7,6 +7,7 @@
 </p>
 
 CloudsdaleExpress Fabric Mod provides handshake and compatibility support for the CloudsdaleExpress minecart system on Fabric 1.21.8.
+The accompanying Paper Plugin can be found at [CloudsdaleExpress](https://github.com/TianKong-y/CloudsdaleExpress)
 
 Compared with a server-only setup, this mod adds:
 1. Handshake-based capability detection between client and server.
@@ -54,14 +55,14 @@ Compared with a server-only setup, this mod adds:
 If you want to build from source:
 
 ```bash
-git clone https://github.com/TianKong-y/CloudsdaleExpress.git
-cd CloudsdaleExpress
-./gradlew :fabric-mod:build
+git clone https://github.com/TianKong-y/cloudsdaleexpress-fabric-mod.git
+cd fabric-mod
+./gradlew build
 ```
 
 Output jar location:
 
-* `fabric-mod/build/libs/`
+* `build/libs/`
 
 ---
 
