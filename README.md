@@ -79,4 +79,5 @@ You may use, modify, and redistribute this project under GPL-3.0 terms. Any dist
 
 * Author: TianKong_y
 * GitHub: https://github.com/TianKong-y
-* Add your preferred contact channels here (for example GitHub Issues, Bilibili, QQ group, Discord).
+* bilibili：[TianKong_y](https://space.bilibili.com/288309681)
+* QQ：[技术交流/反馈群](https://qm.qq.com/q/m6XfOuCtVe)
