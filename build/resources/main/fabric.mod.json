@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "cloudsdaleexpress",
+  "version": "2.0.0",
+  "name": "CloudsdaleExpress",
+  "description": "CloudsdaleExpress high-speed minecart compatibility mod for Fabric 1.21.8",
+  "authors": [
+    "TianKong_y"
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.smoothquartz.minecart.SmoothQuartzServer"
+    ],
+    "client": [
+      "com.smoothquartz.minecart.SmoothQuartzClient"
+    ]
+  },
+  "mixins": [
+    "mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "1.21.8",
+    "fabric-api": "*"
+  }
+}

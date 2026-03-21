@@ -1,0 +1,22 @@
+{
+  "mappings": {
+    "com/smoothquartz/minecart/mixin/MinecartControllerAccessor": {
+      "minecart": "field_52520:Lnet/minecraft/class_1688;"
+    },
+    "com/smoothquartz/minecart/mixin/MinecartPhysicsMixin": {
+      "getMaxSpeed": "method_61598(Lnet/minecraft/class_3218;)D",
+      "moveOnRail": "method_61589(Lnet/minecraft/class_3218;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "com/smoothquartz/minecart/mixin/MinecartControllerAccessor": {
+        "minecart": "field_52520:Lnet/minecraft/class_1688;"
+      },
+      "com/smoothquartz/minecart/mixin/MinecartPhysicsMixin": {
+        "getMaxSpeed": "method_61598(Lnet/minecraft/class_3218;)D",
+        "moveOnRail": "method_61589(Lnet/minecraft/class_3218;)V"
+      }
+    }
+  }
+}
