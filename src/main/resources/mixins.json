@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.smoothquartz.minecart.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "smoothquartz.refmap.json",
+  "mixins": [
+    "MinecartPhysicsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
