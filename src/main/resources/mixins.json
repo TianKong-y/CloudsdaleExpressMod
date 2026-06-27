@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "smoothquartz.refmap.json",
   "mixins": [
+    "MinecartControllerAccessor",
     "MinecartPhysicsMixin"
   ],
   "injectors": {

@@ -1,6 +1,7 @@
 package com.smoothquartz.minecart.mixin;
 
 import com.smoothquartz.minecart.ModPlayerManager;
+import com.smoothquartz.minecart.compat.MinecraftVersionCompat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -47,8 +48,9 @@ public abstract class MinecartPhysicsMixin {
     private boolean isOnSmoothQuartzRail() {
         var minecart = smoothquartz$getMinecart();
         BlockPos railPos = minecart.getBlockPos();
-        BlockState railBlock = minecart.getWorld().getBlockState(railPos);
-        BlockState below = minecart.getWorld().getBlockState(railPos.down());
+        var world = MinecraftVersionCompat.getWorld(minecart);
+        BlockState railBlock = world.getBlockState(railPos);
+        BlockState below = world.getBlockState(railPos.down());
         return railBlock.isOf(Blocks.SMOOTH_QUARTZ) || below.isOf(Blocks.SMOOTH_QUARTZ);
     }
 
@@ -60,10 +62,11 @@ public abstract class MinecartPhysicsMixin {
         }
 
         // Keep server-side tracking support, but do not hard-block local/client behavior.
-        if (smoothquartz$getMinecart().getWorld().isClient()) {
+        var world = MinecraftVersionCompat.getWorld(smoothquartz$getMinecart());
+        if (world.isClient()) {
             return true;
         }
-        return ModPlayerManager.hasMod(player.getUuid()) || smoothquartz$getMinecart().getWorld().getServer() == null;
+        return ModPlayerManager.hasMod(player.getUuid()) || world.getServer() == null;
     }
 
     @Unique

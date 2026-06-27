@@ -53,8 +53,10 @@ public final class SmoothQuartzNetworking {
             }
         });
 
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
-            ClientPlayNetworking.send(new HandshakePayload("HELLO"))
-        );
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            if (ClientPlayNetworking.canSend(HandshakePayload.ID)) {
+                ClientPlayNetworking.send(new HandshakePayload("HELLO"));
+            }
+        });
     }
 }

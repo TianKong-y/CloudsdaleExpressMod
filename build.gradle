@@ -1,15 +1,45 @@
-plugins {
-    id 'fabric-loom' version "${loom_version}"
-    id 'java'
+buildscript {
+    def requestedVersion = providers.gradleProperty('target_version').getOrElse('1.21.8')
+    def selectedLoomVersion = requestedVersion.startsWith('26.') ? '1.17-SNAPSHOT' : '1.15.5'
+
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.fabricmc:fabric-loom:${selectedLoomVersion}"
+    }
+}
+
+def requestedVersion = providers.gradleProperty('target_version').getOrElse('1.21.8')
+apply plugin: requestedVersion.startsWith('26.') ? 'net.fabricmc.fabric-loom' : 'fabric-loom'
+apply plugin: 'java'
+
+def supportedVersions = [
+    '1.21.8':  [yarn: '1.21.8+build.1',  fabricApi: '0.136.1+1.21.8', loader: '0.18.4', java: 21, modern: false],
+    '1.21.9':  [yarn: '1.21.9+build.1',  fabricApi: '0.134.1+1.21.9', loader: '0.18.4', java: 21, modern: false],
+    '1.21.10': [yarn: '1.21.10+build.3', fabricApi: '0.138.4+1.21.10', loader: '0.18.4', java: 21, modern: false],
+    '1.21.11': [yarn: '1.21.11+build.6', fabricApi: '0.141.4+1.21.11', loader: '0.18.4', java: 21, modern: false],
+    '26.1':    [fabricApi: '0.145.1+26.1', loader: '0.19.3', java: 25, modern: true],
+    '26.2':    [fabricApi: '0.153.0+26.2', loader: '0.19.3', java: 25, modern: true]
+]
+
+def targetVersion = providers.gradleProperty('target_version').getOrElse('1.21.8')
+def target = supportedVersions[targetVersion]
+if (target == null) {
+    throw new GradleException("Unsupported target_version '${targetVersion}'. Supported versions: ${supportedVersions.keySet().join(', ')}")
 }
 
 group = 'com.smoothquartz.minecart'
-version = '2.0.0'
+version = "${mod_version}+${targetVersion}"
 
 loom {
-    mixin {
-        useLegacyMixinAp = true
-        defaultRefmapName = 'smoothquartz.refmap.json'
+    if (!target.modern) {
+        mixin {
+            useLegacyMixinAp = true
+            defaultRefmapName = 'smoothquartz.refmap.json'
+        }
     }
 }
 
@@ -17,28 +47,50 @@ base {
     archivesName = 'CloudsdaleExpress'
 }
 
+sourceSets {
+    main {
+        if (target.modern) {
+            java.setSrcDirs(['src/modern/java'])
+            resources.setSrcDirs(['src/modern/resources'])
+        } else {
+            java.setSrcDirs([
+                'src/main/java',
+                targetVersion == '1.21.8' ? 'src/versions/1.21.8/java' : 'src/versions/1.21.9-1.21.11/java'
+            ])
+            resources.setSrcDirs(['src/main/resources'])
+        }
+    }
+}
+
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(target.java)
     }
     withSourcesJar()
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    minecraft "com.mojang:minecraft:${targetVersion}"
+    if (target.modern) {
+        implementation "net.fabricmc:fabric-loader:${target.loader}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${target.fabricApi}"
+    } else {
+        mappings "net.fabricmc:yarn:${target.yarn}:v2"
+        modImplementation "net.fabricmc:fabric-loader:${target.loader}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${target.fabricApi}"
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 21
+    options.release = target.java
 }
 
 processResources {
     inputs.property 'version', project.version
+    inputs.property 'minecraft_version', targetVersion
+    inputs.property 'loader_version', target.loader
     filesMatching('fabric.mod.json') {
-        expand(version: project.version)
+        expand(version: project.version, minecraft_version: targetVersion, loader_version: target.loader)
     }
 }

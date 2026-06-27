@@ -1,9 +1,12 @@
 package com.smoothquartz.minecart;
 
+import com.smoothquartz.minecart.network.HandshakePayload;
+import com.smoothquartz.minecart.network.SmoothQuartzNetworking;
 import java.lang.reflect.Method;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +21,10 @@ public final class SmoothQuartzClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        SmoothQuartzNetworking.initClientNetworking();
+
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            needsHandshake = true;
+            needsHandshake = !ClientPlayNetworking.canSend(HandshakePayload.ID);
             delayTicks = HANDSHAKE_DELAY_TICKS;
         });
 
